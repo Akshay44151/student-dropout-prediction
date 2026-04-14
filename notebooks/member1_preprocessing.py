@@ -111,3 +111,30 @@ print("- data/target.csv")
 print("- images/*.png")
 print("- app/scaler.pkl")
 print("- app/encoders.pkl")
+
+# ======================================
+# Member 2
+# ======================================
+
+# Remove duplicate rows
+df.drop_duplicates(inplace=True)
+
+# Handle outliers using IQR
+for col in df.select_dtypes(include=['int64', 'float64']).columns:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+
+    df[col] = df[col].clip(lower, upper)
+
+# Feature scaling
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+num_cols = df.select_dtypes(include=['int64', 'float64']).columns
+df[num_cols] = scaler.fit_transform(df[num_cols])
+
+print("✅ Additional preprocessing done by Member 2")
